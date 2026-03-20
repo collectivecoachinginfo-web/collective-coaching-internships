@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Collective Coaching — Internship Program</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --berry:#843a58;--berry-dark:#6b2e47;--berry-light:#a0566e;
+  --cream:#eed9c4;--cream-light:#f8f1ea;
+  --taupe:#9a7364;--taupe-light:#c4a898;
+  --white:#ffffff;--text-dark:#2e1a24;--text-body:#4a3540;--bg-page:#faf7f4;
+}
+body{font-family:'Jost',sans-serif;background:var(--bg-page);color:var(--text-dark);margin:0;padding:0}
+a{color:var(--berry)}
+
+/* NAV */
+nav{background:var(--berry);padding:0 48px;display:flex;align-items:center;justify-content:space-between;height:68px;position:sticky;top:0;z-index:100}
+.nav-logo{display:flex;align-items:center}
+.nav-logo img{height:50px;width:auto;display:block;border-radius:6px}
+.nav-links{display:flex;gap:32px;list-style:none}
+.nav-links a{color:rgba(238,217,196,0.75);text-decoration:none;font-size:14px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;transition:color 0.2s}
+.nav-links a:hover{color:var(--cream)}
+.nav-cta{background:var(--cream);color:var(--berry-dark);font-size:13px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:10px 24px;border-radius:30px;text-decoration:none;transition:opacity 0.2s}
+.nav-cta:hover{opacity:0.85}
+
+/* HERO */
+.hero{background:var(--berry);padding:80px 48px 64px;position:relative;overflow:hidden;text-align:center}
+.hero::before{content:'';position:absolute;top:-80px;right:-80px;width:400px;height:400px;border-radius:50%;background:rgba(238,217,196,0.06)}
+.hero::after{content:'';position:absolute;bottom:-60px;left:10%;width:300px;height:300px;border-radius:50%;background:rgba(238,217,196,0.04)}
+.hero-eyebrow{font-size:12px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:rgba(238,217,196,0.65);margin-bottom:16px}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:54px;font-weight:300;color:var(--white);line-height:1.15;max-width:680px;margin:0 auto 16px}
+.hero h1 em{color:var(--cream);font-style:italic}
+.hero-sub{font-size:17px;font-weight:300;line-height:1.7;color:rgba(255,255,255,0.7);max-width:540px;margin:0 auto 36px}
+.hero-pills{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.pill{background:rgba(238,217,196,0.12);border:1px solid rgba(238,217,196,0.25);color:var(--cream);font-size:13px;font-weight:500;letter-spacing:1px;padding:8px 18px;border-radius:30px}
+
+/* STATS */
+.stats-strip{background:var(--cream-light);border-bottom:1px solid var(--cream);display:flex;align-items:center}
+.stat-item{flex:1;text-align:center;padding:30px 16px;position:relative;cursor:default}
+.stat-item:not(:last-child)::after{content:'';position:absolute;right:0;top:20%;bottom:20%;width:1px;background:var(--taupe-light)}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:600;color:var(--berry);display:block;line-height:1}
+.stat-lbl{font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--taupe);margin-top:5px;display:block}
+
+/* SECTIONS */
+.section{padding:68px 48px}
+.section.alt{background:var(--white)}
+.section-label{font-size:11px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:var(--berry);margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.section-label::after{content:'';flex:1;height:1px;background:var(--cream)}
+.section-heading{font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:300;line-height:1.2;margin-bottom:12px}
+.section-heading em{color:var(--berry);font-style:italic}
+.section-intro{font-size:16px;font-weight:300;line-height:1.7;color:var(--text-body);max-width:600px;margin-bottom:40px}
+
+/* TABS */
+.features-tabs{display:flex;gap:0;border-bottom:2px solid var(--cream);margin-bottom:32px}
+.tab-btn{padding:13px 26px;font-family:'Jost',sans-serif;font-size:13px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--taupe);background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-2px;cursor:pointer;transition:color 0.2s,border-color 0.2s}
+.tab-btn:hover{color:var(--berry)}
+.tab-btn.active{color:var(--berry);border-bottom-color:var(--berry)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* FEATURE GRID */
+.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.feature-card{background:var(--white);border:1px solid var(--cream);border-radius:10px;padding:26px;transition:box-shadow 0.2s,transform 0.2s}
+.feature-card:hover{box-shadow:0 4px 20px rgba(132,58,88,0.08);transform:translateY(-2px)}
+.feature-icon{width:42px;height:42px;background:var(--cream-light);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.feature-icon svg{width:18px;height:18px;stroke:var(--berry);fill:none;stroke-width:1.5}
+.feature-card h3{font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--berry-dark);margin-bottom:8px}
+.feature-card p{font-size:14px;font-weight:300;line-height:1.65;color:var(--text-body)}
+
+/* PROCESS */
+.process-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative}
+.process-grid::before{content:'';position:absolute;top:28px;left:calc(12.5% + 14px);right:calc(12.5% + 14px);height:1px;background:var(--cream)}
+.process-step{text-align:center;padding:0 16px;position:relative}
+.step-circle{width:56px;height:56px;border-radius:50%;background:var(--berry);color:var(--white);font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;position:relative;z-index:1}
+.process-step h4{font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--berry-dark);margin-bottom:8px}
+.process-step p{font-size:14px;font-weight:300;line-height:1.6;color:var(--text-body)}
+
+/* PRICING */
+.pricing-toggle{display:flex;align-items:center;gap:14px;margin-bottom:28px}
+.pricing-toggle span{font-size:14px;font-weight:500;color:var(--taupe)}
+.pricing-toggle span.active{color:var(--berry)}
+.toggle-track{width:44px;height:24px;background:var(--cream);border-radius:12px;position:relative;cursor:pointer;transition:background 0.2s}
+.toggle-track.on{background:var(--berry)}
+.toggle-thumb{width:18px;height:18px;background:var(--white);border-radius:50%;position:absolute;top:3px;left:3px;transition:left 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.15)}
+.toggle-track.on .toggle-thumb{left:23px}
+.savings-badge{background:rgba(132,58,88,0.1);color:var(--berry);font-size:12px;font-weight:600;letter-spacing:1px;padding:5px 14px;border-radius:20px}
+.pricing-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.pricing-card{background:var(--white);border:1px solid var(--cream);border-radius:10px;padding:28px 24px;position:relative;transition:box-shadow 0.2s}
+.pricing-card:hover{box-shadow:0 4px 20px rgba(132,58,88,0.08)}
+.pricing-card.featured{background:var(--berry);border-color:var(--berry)}
+.featured-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--cream);color:var(--berry-dark);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:5px 14px;border-radius:20px;white-space:nowrap}
+.tier-emoji{font-size:24px;margin-bottom:10px;display:block}
+.tier-name{font-size:14px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--berry);display:block;margin-bottom:2px}
+.pricing-card.featured .tier-name{color:var(--cream)}
+.tier-tagline{font-size:13px;font-weight:300;color:var(--taupe);font-style:italic;display:block;margin-bottom:20px}
+.pricing-card.featured .tier-tagline{color:rgba(238,217,196,0.7)}
+.price-row{display:flex;align-items:baseline;gap:6px;margin-bottom:4px}
+.price-big{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:600;color:var(--text-dark)}
+.pricing-card.featured .price-big{color:var(--white)}
+.price-per{font-size:13px;font-weight:400;color:var(--taupe)}
+.pricing-card.featured .price-per{color:rgba(238,217,196,0.65)}
+.price-sub{font-size:13px;font-weight:300;color:var(--taupe);margin-bottom:20px}
+.pricing-card.featured .price-sub{color:rgba(238,217,196,0.6)}
+.tier-features{list-style:none;display:flex;flex-direction:column;gap:8px}
+.tier-features li{display:flex;align-items:flex-start;gap:8px;font-size:13px;font-weight:300;color:var(--text-body);line-height:1.5}
+.pricing-card.featured .tier-features li{color:rgba(255,255,255,0.8)}
+.check{width:14px;height:14px;flex-shrink:0;margin-top:1px}
+.check svg{width:14px;height:14px;stroke:var(--berry);fill:none;stroke-width:2}
+.pricing-card.featured .check svg{stroke:var(--cream)}
+
+/* COST COMPARISON */
+.comparison-container{background:var(--white);border:1px solid var(--cream);border-radius:12px;overflow:hidden}
+.comparison-header{background:var(--berry);padding:26px 32px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.comparison-header h3{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:var(--white)}
+.comparison-header h3 em{color:var(--cream);font-style:italic}
+.comparison-header p{font-size:13px;font-weight:300;color:rgba(255,255,255,0.65);margin-top:4px}
+.comparison-controls{display:flex;gap:12px;align-items:center}
+.ctrl-label{font-size:12px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:rgba(238,217,196,0.65)}
+select.ctrl-select{appearance:none;background:rgba(238,217,196,0.12);border:1px solid rgba(238,217,196,0.3);color:var(--cream);font-family:'Jost',sans-serif;font-size:13px;padding:9px 32px 9px 14px;border-radius:6px;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23eed9c4'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+select.ctrl-select option{background:var(--berry)}
+.comparison-body{padding:32px}
+.comparison-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px}
+.metric-card{background:var(--cream-light);border-radius:8px;padding:18px;text-align:center}
+.metric-card.cc{background:rgba(132,58,88,0.07)}
+.metric-label{font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--taupe);margin-bottom:8px}
+.metric-card.cc .metric-label{color:var(--berry)}
+.metric-value{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;color:var(--text-dark);display:block;line-height:1}
+.metric-card.cc .metric-value{color:var(--berry)}
+.metric-sub{font-size:13px;font-weight:300;color:var(--taupe);margin-top:4px}
+.savings-callout{background:rgba(132,58,88,0.06);border:1px solid rgba(132,58,88,0.15);border-radius:8px;padding:16px 22px;display:flex;align-items:center;gap:16px;margin-bottom:28px}
+.savings-icon{width:38px;height:38px;background:var(--berry);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.savings-icon svg{width:16px;height:16px;stroke:white;fill:none;stroke-width:2}
+.savings-callout p{font-size:14px;font-weight:300;color:var(--text-body);line-height:1.55}
+.savings-callout strong{color:var(--berry);font-weight:600}
+.chart-wrapper{position:relative;width:100%;height:300px}
+.chart-footnote{font-size:12px;font-weight:300;color:var(--taupe);margin-top:12px;font-style:italic}
+
+/* WHY PARTNER */
+.benefit-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.benefit-item{display:flex;gap:16px;align-items:flex-start;background:var(--cream-light);border-radius:10px;padding:22px}
+.benefit-num{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:600;color:rgba(132,58,88,0.18);line-height:1;flex-shrink:0;width:36px}
+.benefit-item h4{font-size:13px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;color:var(--berry-dark);margin-bottom:5px}
+.benefit-item p{font-size:14px;font-weight:300;line-height:1.65;color:var(--text-body)}
+
+/* CTA */
+.cta-section{background:var(--berry);padding:72px 48px;text-align:center;position:relative;overflow:hidden}
+.cta-section::before{content:'';position:absolute;top:-80px;right:-80px;width:350px;height:350px;border-radius:50%;background:rgba(238,217,196,0.06)}
+.cta-section h2{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:300;color:var(--white);margin-bottom:14px;position:relative}
+.cta-section h2 em{color:var(--cream);font-style:italic}
+.cta-section > p{font-size:16px;font-weight:300;color:rgba(255,255,255,0.7);max-width:500px;margin:0 auto 36px;line-height:1.7;position:relative}
+.cta-actions{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;position:relative}
+.cta-btn{display:inline-block;font-family:'Jost',sans-serif;font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:16px 36px;border-radius:40px;text-decoration:none;position:relative;transition:opacity 0.2s,transform 0.2s}
+.cta-btn:hover{opacity:0.9;transform:translateY(-1px)}
+.cta-btn.primary{background:var(--cream);color:var(--berry-dark)}
+.cta-btn.secondary{background:transparent;color:var(--cream);border:1.5px solid rgba(238,217,196,0.45)}
+.cta-btn.secondary:hover{background:rgba(238,217,196,0.08)}
+.cta-contact{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:24px;position:relative}
+.cta-email{font-size:14px;font-weight:300;color:rgba(238,217,196,0.6);text-decoration:none;letter-spacing:0.3px;transition:color 0.2s}
+.cta-email:hover{color:var(--cream)}
+.cta-divider{color:rgba(238,217,196,0.3);font-size:16px}
+
+/* FOOTER */
+footer{background:var(--text-dark);padding:24px 48px;display:flex;align-items:center;justify-content:space-between}
+.footer-script{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:var(--cream)}
+.footer-links{display:flex;align-items:center;gap:10px}
+.footer-link{font-size:13px;font-weight:300;color:rgba(238,217,196,0.4);text-decoration:none;letter-spacing:0.5px;transition:color 0.2s}
+.footer-link:hover{color:rgba(238,217,196,0.75)}
+.footer-sep{color:rgba(238,217,196,0.2);font-size:14px}
+.footer-tag{font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:rgba(238,217,196,0.45);background:rgba(238,217,196,0.08);padding:5px 12px;border-radius:20px}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity 0.5s ease,transform 0.5s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* HAMBURGER */
+.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none}
+.nav-hamburger span{display:block;width:24px;height:2px;background:var(--cream);border-radius:2px;transition:all 0.3s}
+
+/* MOBILE DRAWER */
+.nav-mobile-menu{display:none;position:fixed;top:68px;left:0;right:0;background:var(--berry-dark);z-index:99;padding:16px 0;flex-direction:column}
+.nav-mobile-menu.open{display:flex}
+.nav-mobile-menu a{display:block;padding:14px 32px;color:rgba(238,217,196,0.85);text-decoration:none;font-size:14px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;border-bottom:1px solid rgba(238,217,196,0.08);transition:color 0.2s}
+.nav-mobile-menu a:hover{color:var(--cream)}
+.nav-mobile-menu .mob-cta{margin:16px 32px 8px;text-align:center;background:var(--cream);color:var(--berry-dark);border-radius:30px;padding:12px 24px;font-weight:600;border-bottom:none;display:block;text-decoration:none;font-size:13px;letter-spacing:1.5px}
+
+@media(max-width:768px){
+  nav{padding:0 20px;height:60px}
+  .nav-logo img{height:40px}
+  .nav-links{display:none}
+  .nav-cta{display:none}
+  .nav-hamburger{display:flex}
+  .nav-mobile-menu{top:60px}
+  .hero{padding:52px 24px 44px}
+  .hero h1{font-size:34px}
+  .hero-sub{font-size:15px}
+  .hero-eyebrow{font-size:10px;letter-spacing:3px}
+  .pill{font-size:12px;padding:6px 14px}
+  .stats-strip{flex-wrap:wrap}
+  .stat-item{flex:0 0 50%;padding:20px 12px;border-bottom:1px solid var(--cream)}
+  .stat-item:not(:last-child)::after{display:none}
+  .stat-item:nth-child(odd){border-right:1px solid var(--taupe-light)}
+  .stat-num{font-size:28px}
+  .stat-lbl{font-size:10px}
+  .section{padding:44px 20px}
+  .section-heading{font-size:26px}
+  .section-intro{font-size:15px;margin-bottom:28px}
+  .features-tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:nowrap;scrollbar-width:none}
+  .features-tabs::-webkit-scrollbar{display:none}
+  .tab-btn{padding:11px 16px;font-size:11px}
+  .feature-grid{grid-template-columns:1fr;gap:14px}
+  .process-grid{grid-template-columns:1fr 1fr;gap:24px}
+  .process-grid::before{display:none}
+  .process-step{padding:0 8px}
+  .pricing-toggle{flex-wrap:wrap;gap:10px}
+  .pricing-cards{grid-template-columns:1fr;gap:28px}
+  .pricing-card.featured{margin-top:14px}
+  .comparison-header{flex-direction:column;align-items:flex-start;gap:16px;padding:20px}
+  .comparison-controls{width:100%}
+  .ctrl-label{display:none}
+  select.ctrl-select{width:100%}
+  .comparison-body{padding:20px}
+  .comparison-metrics{grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+  .metric-value{font-size:22px}
+  .savings-callout{flex-direction:column;text-align:center;padding:16px}
+  .chart-wrapper{height:220px}
+  .benefit-grid{grid-template-columns:1fr}
+  .cta-section{padding:52px 24px}
+  .cta-section h2{font-size:32px}
+  .cta-section > p{font-size:15px}
+  .cta-actions{flex-direction:column;align-items:center;gap:12px}
+  .cta-btn{width:100%;max-width:320px;text-align:center;padding:15px 24px}
+  .cta-contact{flex-direction:column;gap:8px}
+  footer{flex-direction:column;gap:12px;text-align:center;padding:24px 20px}
+  .footer-links{flex-direction:column;gap:6px}
+}
+
+@media(max-width:480px){
+  .hero h1{font-size:28px}
+  .section-heading{font-size:22px}
+  .process-grid{grid-template-columns:1fr}
+  .metric-value{font-size:18px}
+  .cta-section h2{font-size:26px}
+}
+
+@media(min-width:769px) and (max-width:1024px){
+  nav{padding:0 32px}
+  .hero{padding:64px 32px 52px}
+  .hero h1{font-size:44px}
+  .section{padding:56px 32px}
+  .feature-grid{grid-template-columns:repeat(2,1fr)}
+  .pricing-cards{grid-template-columns:1fr;max-width:460px;margin:0 auto}
+  .process-grid{grid-template-columns:repeat(2,1fr);gap:28px}
+  .process-grid::before{display:none}
+  .comparison-header{flex-direction:column;align-items:flex-start;gap:16px}
+  select.ctrl-select{width:100%}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo"><img id="navLogo" alt="Collective Coaching" /></div>
+  <ul class="nav-links">
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#savings">Cost Savings</a></li>
+    <li><a href="#process">Process</a></li>
+  </ul>
+  <a href="https://www.joincollectivecoaching.com/537ca5db-000d-4ccc-9ac3-dbe3efacbb15" class="nav-cta" target="_blank">Get Started</a>
+  <button class="nav-hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="nav-mobile-menu" id="mobileMenu">
+  <a href="#overview" onclick="closeMobile()">Overview</a>
+  <a href="#pricing" onclick="closeMobile()">Pricing</a>
+  <a href="#savings" onclick="closeMobile()">Cost Savings</a>
+  <a href="#process" onclick="closeMobile()">Process</a>
+  <a href="https://www.joincollectivecoaching.com/537ca5db-000d-4ccc-9ac3-dbe3efacbb15" class="mob-cta" target="_blank">Get Started</a>
+</div>
+
+<div class="hero">
+  <p class="hero-eyebrow">Collective Coaching &middot; Internship Program</p>
+  <h1>Clinical talent,<br><em>built for business.</em></h1>
+  <p class="hero-sub">Pair your health tech team with vetted, coached clinicians ready to drive product development, market research, and clinical insights &mdash; at a fraction of traditional hiring costs.</p>
+  <div class="hero-pills">
+    <span class="pill">3 &amp; 6 Month Programs</span>
+    <span class="pill">5&ndash;10 Hours / Week</span>
+    <span class="pill">100% Vetted Clinicians</span>
+    <span class="pill">Mentored Throughout</span>
+  </div>
+</div>
+
+<div class="stats-strip">
+  <div class="stat-item"><span class="stat-num">$1,100</span><span class="stat-lbl">Starting / Month</span></div>
+  <div class="stat-item"><span class="stat-num">70%+</span><span class="stat-lbl">Savings vs Full-Time</span></div>
+  <div class="stat-item"><span class="stat-num">3</span><span class="stat-lbl">Growth-Stage Tiers</span></div>
+  <div class="stat-item"><span class="stat-num">100%</span><span class="stat-lbl">Clinician-Vetted</span></div>
+  <div class="stat-item"><span class="stat-num">2&times;</span><span class="stat-lbl">Monthly Mentoring</span></div>
+</div>
+
+<div id="overview" class="section reveal">
+  <div class="section-label">Program Overview</div>
+  <h2 class="section-heading">Everything your team needs, <em>nothing you don&rsquo;t.</em></h2>
+  <p class="section-intro">The Collective Coaching Internship Program connects health tech companies with clinicians eager to apply real-world expertise outside traditional clinical roles.</p>
+  <div class="features-tabs">
+    <button class="tab-btn active" onclick="showTab(0,this)">Key Features</button>
+    <button class="tab-btn" onclick="showTab(1,this)">What Interns Do</button>
+    <button class="tab-btn" onclick="showTab(2,this)">Support Structure</button>
+  </div>
+  <div id="tab-0" class="tab-panel active">
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg></div>
+        <h3>Affordable Talent</h3>
+        <p>Vetted, motivated clinicians available for 3 or 6-month engagements at tiered rates matched to your company&rsquo;s growth stage.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+        <h3>Customizable Projects</h3>
+        <p>We work with you to define scope, required skills, and cultural fit &mdash; ensuring your intern contributes meaningfully from day one.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+        <h3>Leadership Check-ins</h3>
+        <p>Monthly tripartite meetings between your team, the intern, and a Collective Coaching mentor keep everyone aligned and progressing.</p>
+      </div>
+    </div>
+  </div>
+  <div id="tab-1" class="tab-panel">
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+        <h3>Product Development</h3>
+        <p>Contribute clinical expertise to product roadmaps, feature validation, and user requirements that reflect real patient and provider needs.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>
+        <h3>Market Research</h3>
+        <p>Conduct clinical landscape analysis, competitive research, and stakeholder interviews to surface insights your business team may miss.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+        <h3>Clinical Insights</h3>
+        <p>Review evidence, synthesize clinical data, and translate healthcare complexity into actionable business intelligence for your team.</p>
+      </div>
+    </div>
+  </div>
+  <div id="tab-2" class="tab-panel">
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.12 1.18 2 2 0 012.11 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.09a16 16 0 006 6l.45-.45a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg></div>
+        <h3>Dedicated CC Mentor</h3>
+        <p>Every intern is paired with an experienced health tech clinician who provides biweekly professional coaching throughout the engagement.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <h3>Rigorous Vetting</h3>
+        <p>Every Collective Coaching intern is screened for clinical credentials, communication skills, and professional readiness before placement.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <h3>Progress Tracking</h3>
+        <p>Structured check-ins, defined milestones, and a formal close-out session ensure your project goals are met and outcomes are documented.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="pricing" class="section alt reveal">
+  <div class="section-label">Investment</div>
+  <h2 class="section-heading">Pricing <em>by stage.</em></h2>
+  <p class="section-intro">Three tiers calibrated to where your company actually is &mdash; not where you hope to be. Save with a 6-month commitment.</p>
+  <div class="pricing-toggle">
+    <span id="lbl3" class="active">3-Month Rate</span>
+    <div class="toggle-track" id="pricingToggle" onclick="togglePricing()"><div class="toggle-thumb"></div></div>
+    <span id="lbl6">6-Month Rate</span>
+    <span class="savings-badge" id="savBadge">Save $200/mo with 6 months</span>
+  </div>
+  <div class="pricing-cards">
+    <div class="pricing-card">
+      <span class="tier-emoji">&#127807;</span>
+      <span class="tier-name">Seed / Pre-Revenue</span>
+      <span class="tier-tagline">Validating ideas or early pilots</span>
+      <div class="price-row"><span class="price-big" id="p-seed">$1,300</span><span class="price-per">/ month</span></div>
+      <p class="price-sub" id="pt-seed">$3,900 total for 3 months</p>
+      <ul class="tier-features">
+        <li><span class="check"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg></span>5&ndash;10 hrs/week commitment</li>
+        <li><span class="check"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg></span>Monthly tripartite check-in</li>
+        <li><span class="check"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg></span>Biweekly intern coaching</li>
+        <li><span class="check"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg></span>Project scoping support</li>
+      </ul>
+    </div>
+    <div class="pricing-card featured">
+      <span class="featured-badge">Most Popular</span>
+      <span class="tier-emoji">&#127807;</span>
+      <span class="tier-name">Early Revenue</span>
+      <span class="tier-tagline">Initial traction, defined priorities</span>
+      <div class="price-row"><span class="price-big" id="p-early">$1,700</span><span class="price-per">/ month</span></div>
+      <p class="price-sub" id="pt-early">$5,100 total for 3 months</p>
+      <ul class="tier-features">
+        <li><span class="check"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg></span>5&ndash;10 hrs/week commitment</li>
+        <li><span class="check"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg></span>Monthly tripartite check-in</li>
+        <li><span class="check"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg></span>Biweekly intern coaching</li>
+        <li><span class="check"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg></span>Project scoping support</li>
+        <li><span class="check"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg></span>Priority candidate matching</li>
+      </ul>
+    </div>
+    <div class="pricing-card">
+      <span class="tier-emoji">&#127795;</span>
+      <span class="tier-name">Growth Track</span>
+      <span class="tier-tagline">Scaling teams, ongoing needs</span>
+      <div class="price-row"><span class="price-big" id="p-growth">$2,100</span><span class="price-per">/ month</span></div>
+      <p class="price-sub" id="pt-growth">$6,300 total for 3 months</p>
+      <ul class="tier-features">
+        <li><span class="check"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg></span>5&ndash;10 hrs/week commitment</li>
+        <li><span class="check"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg></span>Monthly tripartite check-in</li>
+        <li><span class="check"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg></span>Biweekly intern coaching</li>
+        <li><span class="check"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg></span>Project scoping support</li>
+        <li><span class="check"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg></span>Priority candidate matching</li>
+        <li><span class="check"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg></span>Dedicated account manager</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div id="savings" class="section reveal">
+  <div class="section-label">Cost Analysis</div>
+  <h2 class="section-heading">The numbers <em>speak for themselves.</em></h2>
+  <p class="section-intro">Compare what you&rsquo;d spend on a traditional clinical hire versus partnering with Collective Coaching. Select your tier and engagement type below.</p>
+  <div class="comparison-container">
+    <div class="comparison-header">
+      <div>
+        <h3>Cost <em>comparison tool</em></h3>
+        <p>All figures based on US industry averages for clinical / health tech roles. Numbers shown as monthly equivalent costs.</p>
+      </div>
+      <div class="comparison-controls">
+        <span class="ctrl-label">Tier</span>
+        <select class="ctrl-select" id="tierSelect" onchange="updateChart()">
+          <option value="seed3">Seed &middot; 3-Month ($1,300/mo)</option>
+          <option value="seed6">Seed &middot; 6-Month ($1,100/mo)</option>
+          <option value="early3" selected>Early Revenue &middot; 3-Month ($1,700/mo)</option>
+          <option value="early6">Early Revenue &middot; 6-Month ($1,500/mo)</option>
+          <option value="growth3">Growth &middot; 3-Month ($2,100/mo)</option>
+          <option value="growth6">Growth &middot; 6-Month ($1,900/mo)</option>
+        </select>
+      </div>
+    </div>
+    <div class="comparison-body">
+      <div class="comparison-metrics">
+        <div class="metric-card cc"><div class="metric-label">Collective Coaching</div><span class="metric-value" id="met-cc">$1,700</span><div class="metric-sub">/ month</div></div>
+        <div class="metric-card"><div class="metric-label">Full-Time Hire</div><span class="metric-value" id="met-ft">$10,833</span><div class="metric-sub">/ month</div></div>
+        <div class="metric-card"><div class="metric-label">Part-Time Hire</div><span class="metric-value" id="met-pt">$3,031</span><div class="metric-sub">/ month</div></div>
+        <div class="metric-card"><div class="metric-label">Consultant</div><span class="metric-value" id="met-con">$7,200</span><div class="metric-sub">/ month</div></div>
+      </div>
+      <div class="savings-callout">
+        <div class="savings-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+        <p id="savingsText">Compared to a full-time hire, Collective Coaching saves you an estimated <strong id="savingsAmount">$9,133/mo</strong> &mdash; that&rsquo;s <strong id="savingsPct">84%</strong> less per month. Over a 6-month engagement, that&rsquo;s <strong id="savingsTotal">$54,798 saved</strong> versus hiring full-time.</p>
+      </div>
+      <div class="chart-wrapper"><canvas id="costChart"></canvas></div>
+      <p class="chart-footnote">* Full-time avg: $130K/yr all-in (salary + ~30% benefits/overhead) = $10,833/mo. Part-time avg: $35/hr &times; 20 hrs/wk &times; 4.33 wks = $3,031/mo. Consultant avg: $90/hr &times; 80 hrs/mo = $7,200/mo. Sources: BLS Occupational Outlook, LinkedIn Salary Insights, MGMA 2024.</p>
+    </div>
+  </div>
+</div>
+
+<div id="process" class="section alt reveal">
+  <div class="section-label">How It Works</div>
+  <h2 class="section-heading">From conversation to <em>contribution.</em></h2>
+  <p class="section-intro">A clear, structured path from first contact to impactful project execution &mdash; designed to minimize friction for your team.</p>
+  <div class="process-grid">
+    <div class="process-step"><div class="step-circle">1</div><h4>Apply &amp; Define</h4><p>Submit your application and project details. We clarify scope, outcomes, and skill requirements together.</p></div>
+    <div class="process-step"><div class="step-circle">2</div><h4>Match &amp; Approve</h4><p>We present vetted clinicians matched to your needs. You interview and approve the right fit for your team.</p></div>
+    <div class="process-step"><div class="step-circle">3</div><h4>Collaborate &amp; Execute</h4><p>Work on defined goals with monthly CC mentor check-ins to ensure progress and alignment throughout.</p></div>
+    <div class="process-step"><div class="step-circle">4</div><h4>Review &amp; Close</h4><p>Structured feedback at program end shapes outcomes and informs future engagements or renewals.</p></div>
+  </div>
+</div>
+
+<div id="why" class="section reveal">
+  <div class="section-label">Why Partner</div>
+  <h2 class="section-heading">The strategic <em>advantage.</em></h2>
+  <p class="section-intro">What you gain goes beyond cost savings &mdash; it&rsquo;s a differentiated clinical perspective woven into your team&rsquo;s work.</p>
+  <div class="benefit-grid">
+    <div class="benefit-item"><div class="benefit-num">01</div><div><h4>Clinical Insights, Built In</h4><p>Gain perspectives that directly inform product development, UX, and market positioning &mdash; from professionals with hands-on patient care experience your team may not have internally.</p></div></div>
+    <div class="benefit-item"><div class="benefit-num">02</div><div><h4>Managed, Not Raw</h4><p>Interns are actively coached throughout. You&rsquo;re not managing unproven talent alone &mdash; Collective Coaching mentors support performance and professional growth on both sides.</p></div></div>
+    <div class="benefit-item"><div class="benefit-num">03</div><div><h4>Flexible by Design</h4><p>Engagement lengths and tiered pricing scale to where your company actually is. Start with a 3-month pilot and expand &mdash; no long-term headcount commitment required.</p></div></div>
+    <div class="benefit-item"><div class="benefit-num">04</div><div><h4>Talent Pipeline Access</h4><p>Successful partnerships often lead to extended engagements or full hires. Build a clinical talent relationship before committing to permanent headcount.</p></div></div>
+  </div>
+</div>
+
+<div id="cta" class="cta-section">
+  <h2>Ready to <em>build together?</em></h2>
+  <p>Take the next step &mdash; fill out our intake survey, reach us by email, or visit our website to learn more about partnering with Collective Coaching.</p>
+  <div class="cta-actions">
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSefPot0tjy3h8DC1-TWigTD_3qY3WMfRHw4udb-_TzkzMD7Sw/viewform?usp=header" class="cta-btn primary" target="_blank">Start the Intake Survey &nearr;</a>
+    <a href="https://www.joincollectivecoaching.com/537ca5db-000d-4ccc-9ac3-dbe3efacbb15" class="cta-btn secondary" target="_blank">Get Started</a>
+  </div>
+  <div class="cta-contact">
+    <a href="mailto:collectivecoachinginternship@gmail.com" class="cta-email">collectivecoachinginternship@gmail.com</a>
+    <span class="cta-divider">&middot;</span>
+    <a href="https://www.joincollectivecoaching.com" class="cta-email" target="_blank">joincollectivecoaching.com</a>
+  </div>
+</div>
+
+<footer>
+  <span class="footer-script">Collective Coaching</span>
+  <div class="footer-links">
+    <a href="https://www.joincollectivecoaching.com" target="_blank" class="footer-link">joincollectivecoaching.com</a>
+    <span class="footer-sep">&middot;</span>
+    <a href="mailto:collectivecoachinginternship@gmail.com" class="footer-link">collectivecoachinginternship@gmail.com</a>
+  </div>
+  <span class="footer-tag">Internship Program</span>
+</footer>
+
+<script>
+// INJECT LOGO
+document.getElementById('navLogo').src = 'data:image/jpeg;base64,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';
+
+// TABS
+function showTab(idx, btn) {
+  [0,1,2].forEach(i => {
+    document.getElementById('tab-'+i).classList.toggle('active', i===idx);
+  });
+  btn.closest('.features-tabs').querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', i===idx));
+}
+
+// PRICING TOGGLE
+var is6 = false;
+var prices = { seed:[1300,1100], early:[1700,1500], growth:[2100,1900] };
+function togglePricing() {
+  is6 = !is6;
+  var t = document.getElementById('pricingToggle');
+  t.classList.toggle('on', is6);
+  var mo = is6 ? 6 : 3;
+  var idx = is6 ? 1 : 0;
+  document.getElementById('lbl3').classList.toggle('active', !is6);
+  document.getElementById('lbl6').classList.toggle('active', is6);
+  document.getElementById('savBadge').textContent = is6 ? "You're saving $200/mo vs 3-month" : "Save $200/mo with 6 months";
+  ['seed','early','growth'].forEach(function(k) {
+    var p = prices[k][idx];
+    document.getElementById('p-'+k).textContent = '$' + p.toLocaleString();
+    document.getElementById('pt-'+k).textContent = '$' + (p*mo).toLocaleString() + ' total for ' + mo + ' months';
+  });
+}
+
+// COST CHART
+var tierPrices = { seed3:1300,seed6:1100,early3:1700,early6:1500,growth3:2100,growth6:1900 };
+var tierMonths = { seed3:3,seed6:6,early3:3,early6:6,growth3:3,growth6:6 };
+var FT=10833, PT=3031, CON=7200;
+var costChart = null;
+function updateChart() {
+  var tier = document.getElementById('tierSelect').value;
+  var cc = tierPrices[tier];
+  var mo = tierMonths[tier];
+  document.getElementById('met-cc').textContent = '$' + cc.toLocaleString();
+  document.getElementById('met-ft').textContent = '$' + FT.toLocaleString();
+  document.getElementById('met-pt').textContent = '$' + PT.toLocaleString();
+  document.getElementById('met-con').textContent = '$' + CON.toLocaleString();
+  var savMo = FT - cc;
+  var savPct = Math.round((savMo/FT)*100);
+  document.getElementById('savingsAmount').textContent = '$' + savMo.toLocaleString() + '/mo';
+  document.getElementById('savingsPct').textContent = savPct + '%';
+  document.getElementById('savingsTotal').textContent = '$' + (savMo*mo).toLocaleString() + ' saved';
+  var labels = ['Collective Coaching','Part-Time Hire','Consultant','Full-Time Hire'];
+  var vals = [cc, PT, CON, FT];
+  var colors = ['#843a58','#c4a898','#9a7364','#6b2e47'];
+  if (costChart) costChart.destroy();
+  costChart = new Chart(document.getElementById('costChart'), {
+    type: 'bar',
+    data: { labels: labels, datasets: [{ data: vals, backgroundColor: colors, borderRadius: 6, borderSkipped: false }] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: function(ctx) { return ' $' + ctx.parsed.y.toLocaleString() + ' / month'; } } }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { family: 'Jost', size: 13 }, color: '#9a7364' } },
+        y: { beginAtZero: true, grid: { color: 'rgba(154,115,100,0.1)' }, ticks: { font: { family: 'Jost', size: 12 }, color: '#9a7364', callback: function(v) { return '$' + (v/1000).toFixed(0) + 'K'; } } }
+      }
+    }
+  });
+}
+
+// SCROLL REVEAL
+var obs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+
+// SMOOTH SCROLL
+document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+  a.addEventListener('click', function(e) {
+    var t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  });
+});
+
+updateChart();
+
+// HAMBURGER
+var hbtn = document.getElementById('hamburger');
+if(hbtn) {
+  hbtn.addEventListener('click', function() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  });
+}
+function closeMobile() {
+  var m = document.getElementById('mobileMenu');
+  if(m) m.classList.remove('open');
+}
+document.addEventListener('click', function(e) {
+  var menu = document.getElementById('mobileMenu');
+  var btn = document.getElementById('hamburger');
+  if(menu && btn && !menu.contains(e.target) && !btn.contains(e.target)) {
+    menu.classList.remove('open');
+  }
+});
+
+</script>
+</body>
+</html>
